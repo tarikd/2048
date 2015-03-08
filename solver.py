@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import game
 from time import sleep
 from os import system
@@ -61,7 +63,7 @@ class SimpleAI(game.Game):
 			#self.slide(self.getBestMove(self.board))
 			
 
-			self.slide(self.nextMove(self.board, 4))
+			self.slide(self.nextMove(self.board, 2))
 			print self.gradient(self.board)
 			
 
@@ -140,7 +142,6 @@ class SimpleAI(game.Game):
 	""" NAIF """
 	def nextMove(self, board, depth):
 		m, s = self.nextMoveRecur(board, depth, depth)
-		print m
 		return m
 
 	def nextMoveRecur(self, board, depth, depthMax, base=0.9):
@@ -151,6 +152,7 @@ class SimpleAI(game.Game):
 
 		for move in self.testGame.canMove():
 			self.testGame.board = board
+			self.testGame.slide(move)
 			#self.testGame.addTile()
 			score = self.gradient(self.testGame.board)
 			if depth != 0:
@@ -162,6 +164,100 @@ class SimpleAI(game.Game):
 				bestScore = score
 
 		return bestMove, bestScore
+
+
+
+
+	# def player_max(self, board, depth):
+	# 	'''
+	# 	Expectimax
+	# 	'''
+	# 	if depth == 0:
+	# 		return "A",self.utile.calculeScoreH(grilleTemp,heur)
+	# 		"""if grilleTemp.asMove():
+	# 												return "A",self.utile.calculeScoreH(grilleTemp,heur)
+	# 											else:
+	# 												return "A",0"""
+
+	# 	bestScore = -100000000
+	# 	bestCoup = "B"
+	# 	coupPossible = ["W","N","S","E"]
+	# 	newgrilleTemp = Grille()
+
+	# 	for coup in coupPossible:
+	# 		score = 0
+	# 		newgrilleTemp.tab = grilleTemp.tab.copy()
+	# 		CoupNOK = newgrilleTemp.jouerCoup(str(coup))
+					
+	# 		if not(CoupNOK): #Si le coup est validé
+	# 			score += self.player_expect(newgrilleTemp,depth-1,heur)
+	# 			if score >= bestScore:
+	# 				bestCoup = str(coup)
+	# 				bestScore = score
+
+
+		
+	# 	return bestCoup, bestScore
+
+
+	# def player_expect(self, grilleTemp, depth,heur):
+	# 	total_score = 0
+	# 	total_weight = 0
+	# 	probability = 0
+	# 	listPositionTitleAvaible = grilleTemp.positionsAvaibleNewTitle()
+	# 	newgrilleTemp = Grille()
+
+	# 	for position in listPositionTitleAvaible:
+	# 		#on ajoute un nouveau élément à la position
+	# 		newgrilleTemp.tab = grilleTemp.tab.copy()
+	# 		val = newgrilleTemp.ajoutNotAlea(position)
+	# 		coup,score = self.player_max(newgrilleTemp, depth-1,heur)
+	# 		if val == "    2 ":
+	# 			probability = 0.9
+	# 		else:
+	# 			probability = 0.1
+			
+	# 		total_score += score*probability
+	# 		total_weight += probability
+
+	# 	return total_score/total_weight
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

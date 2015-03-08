@@ -118,7 +118,7 @@ class Game(object):
             possibleMoves.append('up')
         if self.shiftRight(invertedBoard) != invertedBoard or self.mergeRight(invertedBoard, 0)[0] != invertedBoard:
             possibleMoves.append('down')
-        return possibleMoves if possibleMoves else False
+        return possibleMoves if possibleMoves else []
 
 
     def isOver(self):
