@@ -63,9 +63,10 @@ class SimpleAI(game.Game):
 			#self.slide(self.getBestMove(self.board))
 			
 
-			self.slide(self.nextMove(self.board, 2))
-			print self.gradient(self.board)
+			# self.slide(self.nextMove(self.board, 4))
+			# print self.gradient(self.board)
 			
+			self.slide(self.playerMax(self.board, 2))
 
 			# system('clear')
 			self.printBoard()
@@ -139,7 +140,7 @@ class SimpleAI(game.Game):
 		return gradMax
 
 
-	""" NAIF """
+	# NAIF
 	def nextMove(self, board, depth):
 		m, s = self.nextMoveRecur(board, depth, depth)
 		return m
@@ -153,7 +154,6 @@ class SimpleAI(game.Game):
 		for move in self.testGame.canMove():
 			self.testGame.board = board
 			self.testGame.slide(move)
-			#self.testGame.addTile()
 			score = self.gradient(self.testGame.board)
 			if depth != 0:
 				my_m, my_s = self.nextMoveRecur(self.testGame.board, depth-1, depthMax)
@@ -168,59 +168,55 @@ class SimpleAI(game.Game):
 
 
 
-	# def player_max(self, board, depth):
-	# 	'''
-	# 	Expectimax
-	# 	'''
-	# 	if depth == 0:
-	# 		return "A",self.utile.calculeScoreH(grilleTemp,heur)
-	# 		"""if grilleTemp.asMove():
-	# 												return "A",self.utile.calculeScoreH(grilleTemp,heur)
-	# 											else:
-	# 												return "A",0"""
+	def playerMax(self, board, depth):
+		'''
+		Expectimax
+		'''
 
-	# 	bestScore = -100000000
-	# 	bestCoup = "B"
-	# 	coupPossible = ["W","N","S","E"]
-	# 	newgrilleTemp = Grille()
+		bestScore = -1.
+		bestMove = "B"
+		possibleMoves = ["l","u","d","r"]
+		self.testGame.board = board
 
-	# 	for coup in coupPossible:
-	# 		score = 0
-	# 		newgrilleTemp.tab = grilleTemp.tab.copy()
-	# 		CoupNOK = newgrilleTemp.jouerCoup(str(coup))
-					
-	# 		if not(CoupNOK): #Si le coup est validé
-	# 			score += self.player_expect(newgrilleTemp,depth-1,heur)
-	# 			if score >= bestScore:
-	# 				bestCoup = str(coup)
-	# 				bestScore = score
+		if depth == 0:
+			return "A",self.gradient(self.testGame.board)
 
+		for move in self.testGame.canMove():
+			score = 0
+			self.testGame.board = board
+			self.testGame.slide(move)
 
-		
-	# 	return bestCoup, bestScore
+			score += self.playerExpect(self.testGame.board, depth-1)
+
+			if score >= bestScore:
+				bestMove = move
+				bestScore = score
+
+		return bestMove, bestScore
 
 
-	# def player_expect(self, grilleTemp, depth,heur):
-	# 	total_score = 0
-	# 	total_weight = 0
-	# 	probability = 0
-	# 	listPositionTitleAvaible = grilleTemp.positionsAvaibleNewTitle()
-	# 	newgrilleTemp = Grille()
+	def playerExpect(self, board, depth):
+		totalScore = 0
+		totalWeight = 0
+		probability = 0
+		listPositionAvailable = self.testGame.getEmptyTiles()
+		self.testGame.board = board
 
-	# 	for position in listPositionTitleAvaible:
-	# 		#on ajoute un nouveau élément à la position
-	# 		newgrilleTemp.tab = grilleTemp.tab.copy()
-	# 		val = newgrilleTemp.ajoutNotAlea(position)
-	# 		coup,score = self.player_max(newgrilleTemp, depth-1,heur)
-	# 		if val == "    2 ":
-	# 			probability = 0.9
-	# 		else:
-	# 			probability = 0.1
+		for position in listPositionAvailable:
+			#on ajoute un nouveau élément à la position
+			self.testGame.board = board
+			val = self.testGame.addTile(position)
+			move, score = self.playerMax(self.testGame.board, depth-1)
+
+			if val == "2":
+				probability = 0.9
+			else:
+				probability = 0.1
 			
-	# 		total_score += score*probability
-	# 		total_weight += probability
+			totalScore += score*probability
+			totalWeight += probability
 
-	# 	return total_score/total_weight
+		return totalScore/totalWeight
 
 
 
