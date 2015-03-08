@@ -2,6 +2,7 @@ import game
 from time import sleep
 from os import system
 import copy
+from scipy import array
 
 class SimpleAI(game.Game):
 	def __init__(self, r, *args):
@@ -57,7 +58,13 @@ class SimpleAI(game.Game):
 		'''
 		while not self.isOver():
 			#print self.getBestMove(self.board)
-			self.slide(self.getBestMove(self.board))
+			#self.slide(self.getBestMove(self.board))
+			
+
+			self.slide(self.nextMove(self.board, 4))
+			print self.gradient(self.board)
+			
+
 			# system('clear')
 			self.printBoard()
 			# sleep(.5)
@@ -90,84 +97,94 @@ class SimpleAI(game.Game):
 			print 'Average Score:', sum(scores)/len(scores)
 
 
-	def gradientBottomRight(self, board):
+	def gradient(self, board):
 		'''
 		Gradient
 		'''
-		tabHeur = array([[-3,-2,-1,0]
+
+		tabHeurBottomRight = array([[-3,-2,-1,0]
 			,[-2,-1,0,1]
 			,[-1,0,1,2]
 			,[0,1,2,3]])
 
-		result = 0.0
-		for i in range(0,4):
-			for j in range(0,4):
-				if tab[i][j] != "      ":
-					result += int(board[i][j])*int(tabHeur[i][j])
-
-		return result
-
-	def gradientTopRight(self, board):
-		'''
-		Gradient
-		'''
-		tabHeur = array([[0,1,2,3]
+		tabHeurTopRight = array([[0,1,2,3]
 			,[-1,0,1,2]
 			,[-2,-1,0,1]
 			,[-3,-2,-1,0]])
 
-		result = 0.0
-		for i in range(0,4):
-			for j in range(0,4):
-				if tab[i][j] != "      ":
-					result += int(board[i][j])*int(tabHeur[i][j])
-
-		return result
-
-	def gradientTopLeft(self, board):
-		'''
-		Gradient
-		'''
-		tabHeur = array([[3,2,1,0]
+		tabHeurTopLeft = array([[3,2,1,0]
 			,[2,1,0,-1]
 			,[1,0,-1,-2]
 			,[0,-1,-2,-3]])
 
-		result = 0.0
-		for i in range(0,4):
-			for j in range(0,4):
-				if tab[i][j] != "      ":
-					result += int(board[i][j])*int(tabHeur[i][j])
-
-		return result
-
-	def gradientBottomLeft(self, board):
-		'''
-		Gradient
-		'''
-		tabHeur = array([[0,-1,-2,-3]
+		tabHeurBottomLeft = array([[0,-1,-2,-3]
 			,[1,0,-1,-2]
 			,[2,1,0,-1]
 			,[3,2,1,0]])
 
-		result = 0.0
-		for i in range(0,4):
-			for j in range(0,4):
-				if tab[i][j] != "      ":
-					result += int(board[i][j])*int(tabHeur[i][j])
+		tabHeur = [tabHeurBottomRight, tabHeurTopRight, tabHeurTopLeft, tabHeurBottomLeft]
 
-		return result
+		gradMax = 0
+		for tabGrad in tabHeur:
+			result = 0.0
+			for i in range(0,4):
+				for j in range(0,4):
+					if board[i][j] != "      ":
+						result += int(board[i][j])*int(tabGrad[i][j])
 
+			gradMax = max(gradMax, result)
 
-
-
-
-
-
-
+		return gradMax
 
 
+	""" NAIF """
+	def nextMove(self, board, depth):
+		m, s = self.nextMoveRecur(board, depth, depth)
+		print m
+		return m
 
+	def nextMoveRecur(self, board, depth, depthMax, base=0.9):
+		bestScore = -1.
+		bestMove = None
+		possibleMoves = ["l","u","d","r"]
+		self.testGame.board = board
+
+		for move in self.testGame.canMove():
+			self.testGame.board = board
+			#self.testGame.addTile()
+			score = self.gradient(self.testGame.board)
+			if depth != 0:
+				my_m, my_s = self.nextMoveRecur(self.testGame.board, depth-1, depthMax)
+				score += my_s*pow(base, depthMax-depth+1)
+
+			if score > bestScore:
+				bestMove = move
+				bestScore = score
+
+		return bestMove, bestScore
+
+
+
+
+
+	# def getBestMove2(self, board):
+	# 	'''
+	# 	Determines the optimal move based on the value function
+
+	# 	returns: direction of optimal move
+	# 	'''
+	# 	self.testGame.board = board
+	# 	bestMove = None
+	# 	bestH = 0
+	# 	for move in self.testGame.canMove():
+	# 		self.testGame.board = board
+	# 		self.testGame.score = 0
+	# 		self.testGame.slide(move, addTile=False)
+	# 		print self.gradient(self.testGame.board) + self.testGame.score
+	# 		if (self.gradient(self.testGame.board) + self.testGame.score) > bestH:
+	# 			bestH = (self.gradient(self.testGame.board) + self.testGame.score)
+	# 			bestMove = move
+	# 	return bestMove
 
 
 
