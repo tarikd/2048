@@ -11,7 +11,7 @@ b.goal = 4096
 
 
 # Je fais tourner mon AI naïve sur X board à la suite, jusqu'à ce que j'atteigne le GOAL fixé
-b.simPlay(10)
+b.simPlay(25)
 
 
 

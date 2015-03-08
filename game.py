@@ -173,7 +173,7 @@ class Game(object):
         try:
             row, col = random.choice(self.getEmptyTiles())
             self.board[row][col] = 2 if random.random() < self.prob else 4
-            return True
+            return self.board[row][col]
         except:
             return False
 

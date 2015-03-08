@@ -66,7 +66,7 @@ class SimpleAI(game.Game):
 			# self.slide(self.nextMove(self.board, 4))
 			# print self.gradient(self.board)
 			
-			print self.playerMax(self.board, 4)
+			#print self.playerMax(self.board, 4)
 			self.slide(self.playerMax(self.board, 4)[0])
 
 			# system('clear')
@@ -174,13 +174,13 @@ class SimpleAI(game.Game):
 		Expectimax
 		'''
 
-		bestScore = -1.
-		bestMove = "B"
+		bestScore = -1
+		bestMove = ""
 		possibleMoves = ["l","u","d","r"]
 		self.testGame.board = board
 
 		if depth == 0:
-			return "A",self.gradient(self.testGame.board)
+			return "A", self.calculScoreH2_1(self.testGame.board)
 
 		for move in self.testGame.canMove():
 			score = 0
@@ -204,7 +204,6 @@ class SimpleAI(game.Game):
 		self.testGame.board = board
 
 		for position in listPositionAvailable:
-			#on ajoute un nouveau élément à la position
 			self.testGame.board = board
 			val = self.testGame.addTile(position)
 			move, score = self.playerMax(self.testGame.board, depth-1)
@@ -218,14 +217,22 @@ class SimpleAI(game.Game):
 			totalWeight += probability
 
 		if totalWeight != 0:
-			return int(totalScore/totalWeight)
+			return totalScore/totalWeight
 		else:
 			return 0
 
 
+	def calculScoreH2_1(self, board):
+		result = 0
+		self.testGame.board = board
 
+		result += self.gradient(self.testGame.board)
+		
+		nbFreeTitle = len(self.testGame.getEmptyTiles())
 
+		result += -(16-nbFreeTitle)**2
 
+		return result
 
 
 
