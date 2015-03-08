@@ -75,6 +75,7 @@ class SimpleAI(game.Game):
 					print i
 				self.reset()
 				self.loop()
+				scores.append(self.score)
 				if self.isWon():
 					print 'Winner Winner'
 					self.printBoard()
