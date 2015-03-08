@@ -180,7 +180,7 @@ class SimpleAI(game.Game):
 		self.testGame.board = board
 
 		if depth == 0:
-			return "A", self.calculScoreH2_1(self.testGame.board)
+			return "A", self.calculeScorePosition(self.testGame.board)
 
 		for move in self.testGame.canMove():
 			score = 0
@@ -236,8 +236,21 @@ class SimpleAI(game.Game):
 
 
 
+	def calculeScorePosition(self, board, r=0.25):
+		tabHeur = array([[13,12,5,4]
+						,[14,11,6,3]
+						,[15,10,7,2]
+						,[16,9,8,1]])
 
 
+		result = 0.0
+
+		for i in range(0,4):
+			for j in range(0,4):
+				if board[i][j] != "":
+					result += int(board[i][j])*r**int(tabHeur[i][j])
+
+		return result
 
 
 
