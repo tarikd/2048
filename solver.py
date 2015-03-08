@@ -77,7 +77,7 @@ class SimpleAI(game.Game):
 				self.loop()
 				scores.append(self.score)
 				if self.isWon():
-					print 'Winner Winner'
+					print '>>>>>>>>>>>   Winner Winner   <<<<<<<<<<<'
 					self.printBoard()
 					scores.append(self.score)
 					break
@@ -90,7 +90,73 @@ class SimpleAI(game.Game):
 			print 'Average Score:', sum(scores)/len(scores)
 
 
+	def gradientBottomRight(self, board):
+		'''
+		Gradient
+		'''
+		tabHeur = array([[-3,-2,-1,0]
+			,[-2,-1,0,1]
+			,[-1,0,1,2]
+			,[0,1,2,3]])
 
+		result = 0.0
+		for i in range(0,4):
+			for j in range(0,4):
+				if tab[i][j] != "      ":
+					result += int(board[i][j])*int(tabHeur[i][j])
+
+		return result
+
+	def gradientTopRight(self, board):
+		'''
+		Gradient
+		'''
+		tabHeur = array([[0,1,2,3]
+			,[-1,0,1,2]
+			,[-2,-1,0,1]
+			,[-3,-2,-1,0]])
+
+		result = 0.0
+		for i in range(0,4):
+			for j in range(0,4):
+				if tab[i][j] != "      ":
+					result += int(board[i][j])*int(tabHeur[i][j])
+
+		return result
+
+	def gradientTopLeft(self, board):
+		'''
+		Gradient
+		'''
+		tabHeur = array([[3,2,1,0]
+			,[2,1,0,-1]
+			,[1,0,-1,-2]
+			,[0,-1,-2,-3]])
+
+		result = 0.0
+		for i in range(0,4):
+			for j in range(0,4):
+				if tab[i][j] != "      ":
+					result += int(board[i][j])*int(tabHeur[i][j])
+
+		return result
+
+	def gradientBottomLeft(self, board):
+		'''
+		Gradient
+		'''
+		tabHeur = array([[0,-1,-2,-3]
+			,[1,0,-1,-2]
+			,[2,1,0,-1]
+			,[3,2,1,0]])
+
+		result = 0.0
+		for i in range(0,4):
+			for j in range(0,4):
+				if tab[i][j] != "      ":
+					result += int(board[i][j])*int(tabHeur[i][j])
+
+		return result
 
 
 
