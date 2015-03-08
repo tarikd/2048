@@ -66,7 +66,8 @@ class SimpleAI(game.Game):
 			# self.slide(self.nextMove(self.board, 4))
 			# print self.gradient(self.board)
 			
-			self.slide(self.playerMax(self.board, 2))
+			print self.playerMax(self.board, 4)
+			self.slide(self.playerMax(self.board, 4)[0])
 
 			# system('clear')
 			self.printBoard()
@@ -216,8 +217,10 @@ class SimpleAI(game.Game):
 			totalScore += score*probability
 			totalWeight += probability
 
-		return totalScore/totalWeight
-
+		if totalWeight != 0:
+			return int(totalScore/totalWeight)
+		else:
+			return 0
 
 
 
